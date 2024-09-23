@@ -1,48 +1,52 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Collections;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour {
-
+public class PlayerMovement : MonoBehaviour
+{
     [SerializeField] private float playerSpeed = 1.5f;
+    [SerializeField] private float jumpHeightMultiplier = 2f;
 
     public Rigidbody2D body;
+
     [SerializeField] private bool InAir;
 
-    // Start is called before the first frame update
-    void Start() {
-
-    }
-
-    // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         if (InAir)
         {
-            Debug.Log (InAir);
+            //Fill with air movement
         }
-        else {
+        else
+        {
+            //Caching the value from W,A,S,D buttons
+            float xInput = Input.GetAxis("Horizontal");
+            float yInput = Input.GetAxis("Vertical");
 
-        float xInput = Input.GetAxis("Horizontal");
-        float yInput = Input.GetAxis("Vertical");
-        Vector2 direction= new Vector2(xInput, 0);
-        body.velocity = direction *playerSpeed;
-        if (yInput >0){
-            Debug.Log (yInput);
-            InAir= true;
-            body.velocity = direction *playerSpeed *2;
-        }
+            //Creating a horizontal vector for movement
+            Vector2 direction = new Vector2(xInput, 0);
+
+            //Applying move direction
+            body.velocity = direction * playerSpeed;
+
+            //If there is vertical movement (Jump)
+            if (yInput > 0)
+            {
+                InAir = true;
+                direction = new Vector2(xInput, yInput);
+                body.velocity = direction * playerSpeed * jumpHeightMultiplier;
+            }
         }
     }
 
-     void OnCollisionEnter2D(Collision2D collision)
-     { 
-        Debug.Log (InAir);
-        if(!InAir){return;} //checks if player is in the air to continue 
-        if (collision.gameObject.layer==LayerMask.NameToLayer("Floor"))//if coliided object is equal to floor 
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (!InAir) { return; } //checks if player is in the air to continue 
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Floor"))//if coliided object is equal to floor 
         {
             InAir = false;
-            Debug.Log (InAir);
         }
-     }
+    }
+
 }
