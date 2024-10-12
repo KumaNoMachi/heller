@@ -67,12 +67,12 @@ public class CharacterMovement : MonoBehaviour
     /// </summary>
     private void HandleRun()
     {
-        //Based on right faced images
-        if (_xMoveIntention < 0 && transform.rotation.y == 0)//if we wanna move left and not facing left
+        //Based on left faced images
+        if (_xMoveIntention > 0 && transform.rotation.y == 0)//if we wanna move right and not facing right
         {
             transform.rotation = Quaternion.Euler(0, 180f, 0);
         }
-        else if (_xMoveIntention > 0 && transform.rotation.y != 0)//if we wanna move right and not facing right
+        else if (_xMoveIntention < 0 && transform.rotation.y != 0)//if we wanna move left and not facing left
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
